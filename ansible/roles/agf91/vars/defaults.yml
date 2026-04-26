@@ -1,0 +1,7 @@
+policy_dir: "{{ playbook_dir }}/../../policies"
+
+policy_files:
+  allowed_intents: "{{ policy_dir }}/allowed_intents.yml"
+  thresholds: "{{ policy_dir }}/thresholds.yml"
+  rate_limits: "{{ policy_dir }}/rate_limits.yml"
+  time_windows: "{{ policy_dir }}/time_windows.yml"

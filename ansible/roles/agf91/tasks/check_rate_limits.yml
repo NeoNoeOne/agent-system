@@ -1,0 +1,23 @@
+- name: Enforce per-cycle limit
+  assert:
+    that:
+      - proposal.execution_stats.actions_this_cycle < rate_limits_policy.per_cycle.max_actions
+    fail_msg: >
+      [AGF91] REJECTED:
+      Exceeded per-cycle limit
+
+- name: Enforce per-hour limit
+  assert:
+    that:
+      - proposal.execution_stats.actions_last_hour < rate_limits_policy.per_hour.max_actions
+    fail_msg: >
+      [AGF91] REJECTED:
+      Exceeded per-hour limit
+
+- name: Enforce per-day limit
+  assert:
+    that:
+      - proposal.execution_stats.actions_today < rate_limits_policy.per_day.max_actions
+    fail_msg: >
+      [AGF91] REJECTED:
+      Exceeded per-day limit

@@ -1,0 +1,7 @@
+- name: Check intent is allowed
+  assert:
+    that:
+      - proposal.intent in allowed_intents_policy.allowed_intents
+    fail_msg: >
+      [AGF91] REJECTED:
+      Intent '{{ proposal.intent }}' is not allowed

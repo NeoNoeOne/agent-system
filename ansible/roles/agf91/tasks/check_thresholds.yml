@@ -1,0 +1,15 @@
+- name: Check proposal confidence
+  assert:
+    that:
+      - proposal.confidence | float >= thresholds_policy.confidence.minimum_proposal_confidence
+    fail_msg: >
+      [AGF91] REJECTED:
+      Proposal confidence too low
+
+- name: Check OCR confidence
+  assert:
+    that:
+      - proposal.evidence.confidence | int >= thresholds_policy.confidence.minimum_ocr_confidence
+    fail_msg: >
+      [AGF91] REJECTED:
+      OCR confidence too low

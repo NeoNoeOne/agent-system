@@ -1,0 +1,18 @@
+- set_fact:
+    now_time: "{{ ansible_date_time.hour }}:{{ ansible_date_time.minute }}"
+    now_day: "{{ ansible_date_time.weekday | lower }}"
+
+- name: Check allowed execution window
+  assert:
+    that:
+      - >
+        time_windows_policy.allowed_windows | selectattr(
+          'days', 'contains', now_day
+        ) | selectattr(
+          'start', 'le', now_time
+        ) | selectattr(
+          'end', 'ge', now_time
+        ) | list | length > 0
+    fail_msg: >
+      [AGF91] REJECTED:
+      Outside allowed time window

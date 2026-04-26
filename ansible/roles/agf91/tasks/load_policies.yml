@@ -1,0 +1,15 @@
+- include_vars:
+    file: "{{ policy_files.allowed_intents }}"
+    name: allowed_intents_policy
+
+- include_vars:
+    file: "{{ policy_files.thresholds }}"
+    name: thresholds_policy
+
+- include_vars:
+    file: "{{ policy_files.rate_limits }}"
+    name: rate_limits_policy
+
+- include_vars:
+    file: "{{ policy_files.time_windows }}"
+    name: time_windows_policy
