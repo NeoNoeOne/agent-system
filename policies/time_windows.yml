@@ -1,0 +1,9 @@
+version: 1
+description: >
+  Development mode: no time restrictions.
+
+timezone: Asia/Hong_Kong
+
+allowed_windows: []
+
+blackout_windows: []

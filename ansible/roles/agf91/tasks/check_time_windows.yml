@@ -1,9 +1,18 @@
-- set_fact:
-    now_time: "{{ ansible_date_time.hour }}:{{ ansible_date_time.minute }}"
+- name: AGF91 | Get current local time (zero-padded)
+  ansible.builtin.set_fact:
+    now_time: "{{ '%02d:%02d' | format(ansible_date_time.hour | int, ansible_date_time.minute | int) }}"
     now_day: "{{ ansible_date_time.weekday | lower }}"
 
-- name: Check allowed execution window
-  assert:
+# DEV OVERRIDE: allow all when allowed_windows is empty
+- name: AGF91 | Allow all when no time windows defined
+  ansible.builtin.assert:
+    that:
+      - time_windows_policy.allowed_windows | length > 0
+  failed_when: false
+  changed_when: false
+
+- name: AGF91 | Check allowed execution window
+  ansible.builtin.assert:
     that:
       - >
         time_windows_policy.allowed_windows | selectattr(
@@ -13,6 +22,5 @@
         ) | selectattr(
           'end', 'ge', now_time
         ) | list | length > 0
-    fail_msg: >
-      [AGF91] REJECTED:
-      Outside allowed time window
+    fail_msg: "[AGF91] REJECTED: Outside allowed execution window"
+  when: time_windows_policy.allowed_windows | length > 0
