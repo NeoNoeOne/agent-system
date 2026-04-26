@@ -1,0 +1,14 @@
+# policies/thresholds.yml
+version: 1
+description: >
+  Confidence and validation thresholds enforced by AGF91.
+
+confidence:
+  minimum_proposal_confidence: 0.75
+  minimum_ocr_confidence: 70
+
+validation:
+  require_bbox_match: true
+  require_exact_text_match: true
+  require_xy_recompute_match: true
+``

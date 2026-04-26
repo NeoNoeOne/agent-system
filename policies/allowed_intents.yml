@@ -1,0 +1,17 @@
+# policies/allowed_intents.yml
+version: 1
+description: >
+  Canonical list of intents that AGNEO is allowed to propose.
+  Any intent not listed here MUST be rejected.
+
+allowed_intents:
+  - COLLECT_DAILY_REWARD
+  - CONFIRM_DIALOG
+  - CLOSE_POPUP
+
+# Explicitly disallowed (documentation only)
+disallowed_examples:
+  - PURCHASE_ITEM
+  - NAVIGATE_UNKNOWN
+  - SCROLL_RANDOMLY
+``
