@@ -1,0 +1,135 @@
+{
+  "name": "AGN8N Canonical Orchestration Flow",
+  "nodes": [
+    {
+      "id": "cron_trigger",
+      "name": "Cron Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [200, 300],
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyDay",
+              "hour": 9,
+              "minute": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "observe",
+      "name": "AGAAP Observe (AGBUZZ)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [450, 300],
+      "parameters": {
+        "url": "http://agbuzz/observe",
+        "method": "POST",
+        "responseFormat": "json"
+      }
+    },
+    {
+      "id": "reason",
+      "name": "AGAAP Reason (AGNEO)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [700, 300],
+      "parameters": {
+        "url": "http://agneo/reason",
+        "method": "POST",
+        "jsonParameters": true,
+        "bodyParametersJson": "={{ $json }}",
+        "responseFormat": "json"
+      }
+    },
+    {
+      "id": "policy",
+      "name": "AGAAP Policy Check (AGF91)",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [950, 300],
+      "parameters": {
+        "command": "ansible-playbook ansible/playbooks/policy.yml -e 'proposed_instruction={{ $json }}'"
+      }
+    },
+    {
+      "id": "approval",
+      "name": "Wait for Mattermost Approval",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1200, 300],
+      "parameters": {
+        "waitTill": "webhook"
+      }
+    },
+    {
+      "id": "execute",
+      "name": "AGAAP Execute (AGBUZZ)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1450, 300],
+      "parameters": {
+        "url": "http://agbuzz/execute",
+        "method": "POST",
+        "jsonParameters": true,
+        "bodyParametersJson": "={{ $json }}",
+        "responseFormat": "json"
+      }
+    },
+    {
+      "id": "verify",
+      "name": "AGAAP Verify (AGWING)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1700, 300],
+      "parameters": {
+        "url": "http://agwing/verify",
+        "method": "POST",
+        "jsonParameters": true,
+        "bodyParametersJson": "={{ $json }}",
+        "responseFormat": "json"
+      }
+    },
+    {
+      "id": "archive",
+      "name": "AGAAP Archive (AGRX78)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1950, 300],
+      "parameters": {
+        "url": "http://agrx78/archive",
+        "method": "POST",
+        "jsonParameters": true,
+        "bodyParametersJson": "={{ $json }}",
+        "responseFormat": "json"
+      }
+    }
+  ],
+  "connections": {
+    "Cron Trigger": {
+      "main": [[{ "node": "AGAAP Observe (AGBUZZ)", "type": "main", "index": 0 }]]
+    },
+    "AGAAP Observe (AGBUZZ)": {
+      "main": [[{ "node": "AGAAP Reason (AGNEO)", "type": "main", "index": 0 }]]
+    },
+    "AGAAP Reason (AGNEO)": {
+      "main": [[{ "node": "AGAAP Policy Check (AGF91)", "type": "main", "index": 0 }]]
+    },
+    "AGAAP Policy Check (AGF91)": {
+      "main": [[{ "node": "Wait for Mattermost Approval", "type": "main", "index": 0 }]]
+    },
+    "Wait for Mattermost Approval": {
+      "main": [[{ "node": "AGAAP Execute (AGBUZZ)", "type": "main", "index": 0 }]]
+    },
+    "AGAAP Execute (AGBUZZ)": {
+      "main": [[{ "node": "AGAAP Verify (AGWING)", "type": "main", "index": 0 }]]
+    },
+    "AGAAP Verify (AGWING)": {
+      "main": [[{ "node": "AGAAP Archive (AGRX78)", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false
+}
