@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Ansible
+*.retry
+
+# n8n
+*.tmp
+
+# OS / IDE
+.DS_Store
